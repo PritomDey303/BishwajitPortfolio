@@ -10,18 +10,28 @@ const categoriesWithMedia = {
   "Mural Painting": [],
   "Traditional Painting": ["Oil", "Acrylic", "Watercolor"],
   "Relief Art": ["Clay", "Cement", "Wood", "Fiber"],
-  Terracotta: ["clay"],
+  Terracotta: ["clay", "Bisque Firing"],
   "Clay Art": ["Ceramics", "Pottery"],
   "Wood Art": ["Carving", "Woodworking"],
   "Cement Art": ["Concrete Sculptures", "Molds"],
-  Sculpture: ["Clay", "Cement", "Fiber", "Stone", "Metal", "Mixed Media"],
+  Sculpture: [
+    "Clay",
+    "Cement",
+    "Fiber",
+    "Stone",
+    "Metal",
+    "Mixed Media",
+    "Idol",
+  ],
   Printmaking: ["Etching", "Lithography", "Screen Printing"],
   "Glass Art": ["Stained Glass", "Glassblowing"],
   "Collage and Assemblage Art": [],
-  "Installation Art": [],
+  "Installation Art": ["Clay", "Cement", "Wood", "Fiber", "Mixed Media"],
 };
 
 export default function GalleryImagesUpload() {
+  const { VITE_CLOUDINARY_API, VITE_CLOUDINARY_UPLOAD_PRESET } = import.meta
+    .env;
   const [category, setCategory] = useState("");
   const [media, setMedia] = useState([]);
   const [images, setImages] = useState([]);
@@ -78,16 +88,13 @@ export default function GalleryImagesUpload() {
       const file = images[index];
       const formData = new FormData();
       formData.append("file", file);
-      formData.append("upload_preset", "bishwajit404");
+      formData.append("upload_preset", VITE_CLOUDINARY_UPLOAD_PRESET);
       formData.append("folder", category);
       try {
-        const response = await fetch(
-          `https://api.cloudinary.com/v1_1/pritom303/image/upload`,
-          {
-            method: "POST",
-            body: formData,
-          }
-        );
+        const response = await fetch(VITE_CLOUDINARY_API, {
+          method: "POST",
+          body: formData,
+        });
         const data = await response.json();
         if (data.secure_url) {
           successfulUploads.push({

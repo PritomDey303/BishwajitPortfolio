@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { db } from "./../../firebase";
+import { collection, getDocs } from "firebase/firestore";
 
 export default function PasswordPage({ setAuthenticated }) {
   const [mobile, setMobile] = useState("");
@@ -9,19 +11,31 @@ export default function PasswordPage({ setAuthenticated }) {
   const [passwordVisible, setPasswordVisible] = useState(false);
   const navigate = useNavigate();
 
-  // List of valid mobile numbers and corresponding passwords
-  const credentials = {
-    "01882787668": "gallery123",
-    "01700000001": "password123",
-    // Add more mobile-number/password pairs as needed
-  };
+  const [credentials, setCredentials] = useState({});
 
-  // Check session storage when the component loads to see if the user is already authenticated
+  useEffect(() => {
+    const fetchCredentials = async () => {
+      try {
+        const querySnapshot = await getDocs(collection(db, "credentials"));
+        const creds = {};
+        querySnapshot.forEach((doc) => {
+          const data = doc.data();
+          creds[data.mobile] = data.password;
+        });
+        setCredentials(creds);
+      } catch (error) {
+        toast.error("Failed to fetch credentials from database.");
+      }
+    };
+
+    fetchCredentials();
+  }, []);
+
   useEffect(() => {
     const isAuthenticated = sessionStorage.getItem("authenticated");
     if (isAuthenticated === "true") {
       setAuthenticated(true);
-      navigate("/upload-gallery"); // Redirect if already authenticated
+      navigate("/upload-gallery");
     }
   }, [navigate, setAuthenticated]);
 
@@ -30,7 +44,7 @@ export default function PasswordPage({ setAuthenticated }) {
 
     if (credentials[mobile] && credentials[mobile] === password) {
       setAuthenticated(true);
-      sessionStorage.setItem("authenticated", "true"); // Store authentication status in session storage
+      sessionStorage.setItem("authenticated", "true");
       toast.success("Successfully authenticated!");
       setTimeout(() => navigate("/upload-gallery"), 1500);
     } else {
@@ -45,7 +59,6 @@ export default function PasswordPage({ setAuthenticated }) {
           Authentication Required
         </h1>
         <form onSubmit={handleSubmit} className="space-y-6">
-          {/* Mobile Input */}
           <div>
             <label
               htmlFor="mobile"
@@ -65,7 +78,6 @@ export default function PasswordPage({ setAuthenticated }) {
             />
           </div>
 
-          {/* Password Input */}
           <div className="relative">
             <label
               htmlFor="password"
@@ -87,41 +99,10 @@ export default function PasswordPage({ setAuthenticated }) {
               onClick={() => setPasswordVisible(!passwordVisible)}
               className="absolute top-1/2 right-4 transform -translate-y-1/2 text-gray-500"
             >
-              {passwordVisible ? (
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  className="w-6 h-6"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M15 12l-3 3-3-3m0 0l-3-3m3 3l3-3"
-                  />
-                </svg>
-              ) : (
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  className="w-6 h-6"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M12 4.5c3.75 0 6.75 3 6.75 6.75S15.75 18 12 18s-6.75-3-6.75-6.75S8.25 4.5 12 4.5z"
-                  />
-                </svg>
-              )}
+              {passwordVisible ? "🙈" : "👁️"}
             </button>
           </div>
 
-          {/* Submit Button */}
           <button
             type="submit"
             className="w-full py-3 bg-blue-600 text-white font-semibold rounded-lg shadow-lg transition duration-300 hover:bg-blue-700 focus:ring-4 focus:ring-blue-300 focus:outline-none"
@@ -130,7 +111,6 @@ export default function PasswordPage({ setAuthenticated }) {
           </button>
         </form>
 
-        {/* Toast Notifications */}
         <ToastContainer
           position="top-right"
           autoClose={3000}

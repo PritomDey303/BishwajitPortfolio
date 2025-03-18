@@ -15,6 +15,7 @@ const categories = [
   "Sculpture",
   "Printmaking",
   "Glass Art",
+  "Terracotta",
   "Collage and Assemblage Art",
   "Installation Art",
 ];

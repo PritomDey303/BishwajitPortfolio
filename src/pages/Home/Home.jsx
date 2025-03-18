@@ -8,7 +8,6 @@ function Home() {
     <>
       <Hero />
       <Skills />
-      <Documentary />
       <Contact />
     </>
   );
