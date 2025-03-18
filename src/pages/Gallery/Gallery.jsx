@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { db } from "./../../firebase"; // Ensure your Firebase config file is properly set up
+import { db } from "../../../firebase"; // Ensure your Firebase config file is properly set up
 import { collection, getDocs } from "firebase/firestore";
 
 // Categories array for the dropdown filter

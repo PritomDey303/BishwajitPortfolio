@@ -23,7 +23,7 @@ dist-ssr
 *.sln
 *.sw?
 # Firebase configuration file (add the actual filename if different)
-firebase-config.js
+firebase.js
 
 # .env file (to ignore environment variables)
 .env

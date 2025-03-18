@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { db } from "./../../firebase";
+import { db } from "../../../firebase";
 import { collection, getDocs } from "firebase/firestore";
 
 export default function PasswordPage({ setAuthenticated }) {

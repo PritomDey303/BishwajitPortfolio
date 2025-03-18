@@ -5,7 +5,7 @@ import {
   EnvelopeIcon,
   UserCircleIcon,
 } from "@heroicons/react/24/solid";
-import { db } from "../../../firebase"; // import the Firebase db instance
+import { db } from "../../../../firebase"; // import the Firebase db instance
 import { collection, getDocs } from "firebase/firestore"; // Firebase functions to fetch data
 
 function Contact() {
